@@ -80,5 +80,9 @@ def delete():
 
     return "<script> document.location = '/entries'; </script>"
 
+@app.route("/login", methods = ["GET", "POST"])
+def login():
+    return render_template("loginPage.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
