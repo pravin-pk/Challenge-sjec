@@ -1,0 +1,75 @@
+body{
+  background: black;
+  background-image: url("99868.jpg");
+  font-family: 'Poppins', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+  
+.btn-shine{
+  position: relative;
+  text-align: center;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  /* margin: 0 auto; */
+  /* top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%); */
+  margin: 0 auto;
+  display: table;
+  padding: 12px 48px;
+  color: #ffffff;
+  background: linear-gradient(to right, #2e3132 0, white 10%, #2b282b 20%);
+  background-position: 0;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 3s infinite linear;
+  animation-fill-mode: forwards;
+  -webkit-text-size-adjust: none;
+  font-weight: 600;
+  font-size: 2.5rem;
+  text-decoration: none;
+  white-space: nowrap
+}
+    
+@keyframes shine{
+  0%{
+    background-position: 0;}
+  60%{
+    background-position: 250px}
+  100%{
+    background-position: 300px}
+  }
+
+.parathing {
+  text-align: center;
+  margin-bottom: 25px;
+  color: white;
+}
+
+/* From cssbuttons.io */
+button {
+    padding: 1.3em 3em;
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #000;
+    background-color: #fff;
+    border: none;
+    border-radius: 45px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+   }
+   
+   button:hover {
+    background-color: #e52eb1;
+    box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+    color: #fff;
+    transform: translateY(-7px);
+   }
+   
+   button:active {
+    transform: translateY(-1px);
+   }

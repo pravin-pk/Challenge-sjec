@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="../static/entrydetails.css">
+    <title>Enter Details</title>
+    <script type="text/javascript">
+        var faqs_row = 0;
+        function addfaqs() {
+        html = '<tr id="faqs-row' + faqs_row + '">';
+            html += '<td><input type="text" class="form-control" name="Cname" id="Cname" placeholder="Competetion name"></td>';
+            html += '<td><input type="date" class="form-control" name="Cdate" id="Cdate" placeholder="Last date"></td>';
+            html += '<td><input type="text" class="form-control" name="Glink" id="Glink" placeholder="GForm link"></td>';
+            html += '<td><input type="text" class="form-control" name="Alink" id="Alink" placeholder="Application link"></td>';
+            // html += '<td class="text-danger mt-10"> 18.76% <i class="fa fa-arrow-down"></i></td>';
+            // html += '<td class="text-danger mt-10"> 18.76% <i class="fa fa-arrow-down"></i></td>';
+            html += '<td class="mt-10"><button class="badge badge-danger" onclick="$(\'#faqs-row' + faqs_row + '\').remove();"><i class="fa fa-trash"></i> Delete</button></td>';
+    
+            html += '</tr>';
+    
+        $('#faqs tbody').append(html);
+    
+        faqs_row++;
+        }
+
+        function delfaqs() {
+            confirm("Are you sure to delete the record")
+        }
+
+        function savedata() {
+        var myRows = [];
+        var headersText = [];
+        var $headers = $("th");
+
+        // Loop through grabbing everything
+        var $rows = $("tbody tr").each(function(index) {
+        $cells = $(this).find("td input");
+        myRows[index] = {};
+
+        $cells.each(function(cellIndex) {
+            // Set the header text
+            if(headersText[cellIndex] === undefined) {
+            headersText[cellIndex] = $($headers[cellIndex]).text();
+            }
+            // Update the row object with the header/cell combo
+            myRows[index][headersText[cellIndex]] = $(this).val();
+        });    
+        });
+
+        // Let's put this in the object like you want and convert to JSON (Note: jQuery will also do this for you on the Ajax request)
+        var myObj = {
+            "myrows": myRows
+        };
+        // alert(JSON.stringify(myRows));
+
+        $.ajax( {
+            type: "POST",
+            url: "/entries",
+            data: JSON.stringify(myRows),
+            contentType: "application/json"
+
+        })
+
+        alert("Data saved successfully")
+    }
+    </script>
+</head>
+{% block content %}
+<body>
+    <div class="page-content page-container" id="page-content">
+        <div class="padding">
+            <div class="row container d-flex justify-content-center">
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="card-title text-center">LIST OF COMPETETIONS</h2>
+                            <hr>
+                            <div class="table-responsive">
+                                <table id="faqs" class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Competition Name</th>
+                                            <th>Last Date</th>
+                                            <th>GForm link</th>
+                                            <th>application link</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for values in content %}
+                                        <tr>
+                                            <td><input type="text" class="form-control" name="Cname" id="Cname" value="{{ values[1] }}"></td>
+                                            <td><input type="date" class="form-control" name="Cdate" id="Cdate" value="{{ values[2] }}"></td>
+                                            <td><input type="text" class="form-control" name="Glink" id="Glink" value="{{ values[3] }}"></td>
+                                            <td><input type="text" class="form-control" name="Alink" id="Alink" value="{{ values[4] }}"></td>
+                                            <form action="/delete" method="post" id="competetionDetails" class="form-control">
+                                            <td class="mt-10"><button class="badge badge-danger" id="deletebtn" name="deletebtn" value="{{ values[0] }}" onclick="delfaqs();"><i class="fa fa-trash"></i> Delete</button></td>
+                                            </form>
+                                        </tr>
+                                        <!-- <tr>
+                                            {% for d in values %}
+                                                <td>{{d}}</td>
+                                            {% endfor %}
+                                        </tr> -->
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center"><button onclick="addfaqs();" class="badge badge-success"><i class="fa fa-plus"></i> ADD NEW</button></div>
+                        </div>
+                    </div>
+                    <br>    
+                    <div class="text-center"><button class="buttonn" onclick="savedata();" ><i class="fa fa-save"></i> SAVE</button></div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}
+</html>
+
+<script type="text/javascript">
+    var faqs_row = 0;
+    function addfaqs() {
+    html = '<tr id="faqs-row' + faqs_row + '">';
+        html += '<td><input type="text" class="form-control" name="Cname" id="Cname" placeholder="Competetion name"></td>';
+        html += '<td><input type="date" class="form-control" name="Cdate" id="Cdate" placeholder="Last date"></td>';
+        html += '<td><input type="text" class="form-control" name="Glink" id="Glink" placeholder="GForm link"></td>';
+        html += '<td><input type="text" class="form-control" name="Alink" id="Alink" placeholder="Application link"></td>';
+        // html += '<td class="text-danger mt-10"> 18.76% <i class="fa fa-arrow-down"></i></td>';
+        // html += '<td class="text-danger mt-10"> 18.76% <i class="fa fa-arrow-down"></i></td>';
+        html += '<td class="mt-10"><button class="badge badge-danger" onclick="$(\'#faqs-row' + faqs_row + '\').remove();"><i class="fa fa-trash"></i> Delete</button></td>';
+
+        html += '</tr>';
+
+    $('#faqs tbody').append(html);
+
+    faqs_row++;
+    }
+
+    function delfaqs() {
+        confirm("Are you sure to delete the record")
+    }
+
+    function savedata() {
+    var myRows = [];
+    var headersText = [];
+    var $headers = $("th");
+
+    // Loop through grabbing everything
+    var $rows = $("tbody tr").each(function(index) {
+    $cells = $(this).find("td input");
+    myRows[index] = {};
+
+    $cells.each(function(cellIndex) {
+        // Set the header text
+        if(headersText[cellIndex] === undefined) {
+        headersText[cellIndex] = $($headers[cellIndex]).text();
+        }
+        // Update the row object with the header/cell combo
+        myRows[index][headersText[cellIndex]] = $(this).val();
+    });    
+    });
+
+    // Let's put this in the object like you want and convert to JSON (Note: jQuery will also do this for you on the Ajax request)
+    var myObj = {
+        "myrows": myRows
+    };
+    // alert(JSON.stringify(myRows));
+
+    $.ajax( {
+        type: "POST",
+        url: "/entries",
+        data: JSON.stringify(myRows),
+        contentType: "application/json"
+
+    })
+
+    alert("Data saved successfully")
+}
+</script>
