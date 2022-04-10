@@ -1,1 +1,1 @@
-web: python challenge.py
+web: gunicorn challenge:app
