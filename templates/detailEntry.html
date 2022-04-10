@@ -69,54 +69,69 @@
         alert("Data saved successfully")
     }
     </script>
+    <style type="text/css">
+        #warning-message { display: none; }
+        @media only screen and (orientation:portrait){
+            #wrapper { display:none; }
+            #warning-message { display:block; }
+        }
+        @media only screen and (orientation:landscape){
+            #warning-message { display:none; }
+        }
+    </style>
 </head>
 {% block content %}
 <body>
-    <div class="page-content page-container" id="page-content">
-        <div class="padding">
-            <div class="row container d-flex justify-content-center">
-                <div class="col-lg-12 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body">
-                            <h2 class="card-title text-center">LIST OF COMPETETIONS</h2>
-                            <hr>
-                            <div class="table-responsive">
-                                <table id="faqs" class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Competition Name</th>
-                                            <th>Last Date</th>
-                                            <th>GForm link</th>
-                                            <th>application link</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for values in content %}
-                                        <tr>
-                                            <td><input type="text" class="form-control" name="Cname" id="Cname" value="{{ values[1] }}"></td>
-                                            <td><input type="date" class="form-control" name="Cdate" id="Cdate" value="{{ values[2] }}"></td>
-                                            <td><input type="text" class="form-control" name="Glink" id="Glink" value="{{ values[3] }}"></td>
-                                            <td><input type="text" class="form-control" name="Alink" id="Alink" value="{{ values[4] }}"></td>
-                                            <form action="/delete" method="post" id="competetionDetails" class="form-control" onsubmit="return confirm('Do you really want to delete the record');">
-                                            <td class="mt-10"><button class="badge badge-danger" id="deletebtn" name="deletebtn" value="{{ values[0] }}" onclick=""><i class="fa fa-trash"></i> Delete</button></td>
-                                            </form>
-                                        </tr>
-                                        <!-- <tr>
-                                            {% for d in values %}
-                                                <td>{{d}}</td>
+    <div id="warning-message">
+        <h3 style="position: relative; text-align: center; padding-top: 20%;">This website is only viewable in landscape mode</h3>
+    </div>
+    <div id="wrapper">
+        <div class="page-content page-container" id="page-content">
+            <div class="padding">
+                <div class="row container d-flex justify-content-center">
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h2 class="card-title text-center">LIST OF COMPETETIONS</h2>
+                                <hr>
+                                <div class="table-responsive">
+                                    <table id="faqs" class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Competition Name</th>
+                                                <th>Last Date</th>
+                                                <th>GForm link</th>
+                                                <th>application link</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for values in content %}
+                                            <tr>
+                                                <td><input type="text" class="form-control" name="Cname" id="Cname" value="{{ values[1] }}"></td>
+                                                <td><input type="date" class="form-control" name="Cdate" id="Cdate" value="{{ values[2] }}"></td>
+                                                <td><input type="text" class="form-control" name="Glink" id="Glink" value="{{ values[3] }}"></td>
+                                                <td><input type="text" class="form-control" name="Alink" id="Alink" value="{{ values[4] }}"></td>
+                                                <form action="/delete" method="post" id="competetionDetails" class="form-control" onsubmit="return confirm('Do you really want to delete the record');">
+                                                <td class="mt-10"><button class="badge badge-danger" id="deletebtn" name="deletebtn" value="{{ values[0] }}" onclick=""><i class="fa fa-trash"></i> Delete</button></td>
+                                                </form>
+                                            </tr>
+                                            <!-- <tr>
+                                                {% for d in values %}
+                                                    <td>{{d}}</td>
+                                                {% endfor %}
+                                            </tr> -->
                                             {% endfor %}
-                                        </tr> -->
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="text-center"><button onclick="addfaqs();" class="badge badge-success"><i class="fa fa-plus"></i> ADD NEW</button></div>
                             </div>
-                            <div class="text-center"><button onclick="addfaqs();" class="badge badge-success"><i class="fa fa-plus"></i> ADD NEW</button></div>
                         </div>
+                        <br>
+                        <div class="text-center"><button class="buttonn" onclick="savedata();" ><i class="fa fa-save"></i> SAVE</button></div>
+        
                     </div>
-                    <br>    
-                    <div class="text-center"><button class="buttonn" onclick="savedata();" ><i class="fa fa-save"></i> SAVE</button></div>
-                    
                 </div>
             </div>
         </div>
