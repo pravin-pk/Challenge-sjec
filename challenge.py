@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session, url_for
 import sqlite3
 
 app = Flask(__name__)
+app.secret_key = "pk"
 
 @app.route("/")
 def mainpage():
@@ -21,19 +22,28 @@ def mainpage():
 @app.route("/entries", methods = ["GET", "POST"])
 def entries():
     if request.method != 'POST':
+        if "user" in session:
 
-        try:
-            conn = sqlite3.connect("competetionDB.sqlite")
-            cur = conn.cursor()
+            try:
+                conn = sqlite3.connect("competetionDB.sqlite")
+                cur = conn.cursor()
 
-            cur.execute("SELECT * FROM COMPETETIONS")
-            data = cur.fetchall()
+                cur.execute("SELECT PASSWORD FROM CREDENTIALS WHERE USERNAME = ?", (session["user"],))
+                passwd = cur.fetchone()
+                
+                if passwd[0] == session["password"]:
+                    cur.execute("SELECT * FROM COMPETETIONS")
+                    data = cur.fetchall()
 
-            return render_template("detailEntry.html", content = data)
-        except sqlite3.Error as e:
-            cur.close()
-            print(e.args)
-            return redirect("/")
+                    return render_template("detailEntry.html", content = data)
+                else:
+                    return redirect(url_for("login"))
+            except sqlite3.Error as e:
+                cur.close()
+                print(e.args)
+                return redirect("/")
+        else:
+            return redirect(url_for("login"))
 
     try:
         data = request.get_json()
@@ -74,7 +84,7 @@ def delete():
     conn = sqlite3.connect("competetionDB.sqlite")
     cur = conn.cursor()
 
-    cur.execute("DELETE FROM COMPETETIONS WHERE ID = ?", (request.form['deletebtn'], ))
+    cur.execute("DELETE FROM COMPETETIONS WHERE ID = ?", (request.form.get('deletebtn'), ))
     conn.commit()
     cur.close()
 
@@ -82,7 +92,13 @@ def delete():
 
 @app.route("/login", methods = ["GET", "POST"])
 def login():
-    return render_template("loginPage.html")
+    if request.method != "POST":
+        return render_template("loginPage.html")
+
+    session["user"] = request.form.get("Username")
+    session["password"] = request.form.get("Password")
+
+    return redirect(url_for("entries"))
 
 if __name__ == "__main__":
     app.run(debug=True)
