@@ -98,8 +98,8 @@
                                             <td><input type="date" class="form-control" name="Cdate" id="Cdate" value="{{ values[2] }}"></td>
                                             <td><input type="text" class="form-control" name="Glink" id="Glink" value="{{ values[3] }}"></td>
                                             <td><input type="text" class="form-control" name="Alink" id="Alink" value="{{ values[4] }}"></td>
-                                            <form action="/delete" method="post" id="competetionDetails" class="form-control">
-                                            <td class="mt-10"><button class="badge badge-danger" id="deletebtn" name="deletebtn" value="{{ values[0] }}" onclick="delfaqs();"><i class="fa fa-trash"></i> Delete</button></td>
+                                            <form action="/delete" method="post" id="competetionDetails" class="form-control" onsubmit="return confirm('Do you really want to delete the record');">
+                                            <td class="mt-10"><button class="badge badge-danger" id="deletebtn" name="deletebtn" value="{{ values[0] }}" onclick=""><i class="fa fa-trash"></i> Delete</button></td>
                                             </form>
                                         </tr>
                                         <!-- <tr>
