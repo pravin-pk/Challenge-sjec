@@ -1,6 +1,6 @@
 body{
   background: black;
-  background-image: url("99868.jpg");
+  background-image: url("grey.jpg");
   font-family: 'Poppins', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -9,7 +9,7 @@ body{
 .btn-shine{
   position: relative;
   text-align: center;
-  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-family:Georgia, 'Times New Roman', Times, serif;
   /* margin: 0 auto; */
   /* top: 50%;
   left: 50%;
@@ -18,7 +18,7 @@ body{
   display: table;
   padding: 12px 48px;
   color: #ffffff;
-  background: linear-gradient(to right, #2e3132 0, white 10%, #2b282b 20%);
+  background: linear-gradient(to right, #000000 0, rgb(255, 255, 255) 10%, #000000 20%);
   background-position: 0;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -37,13 +37,14 @@ body{
   60%{
     background-position: 250px}
   100%{
-    background-position: 300px}
+    background-position: 400px}
   }
 
+  
 .parathing {
   text-align: center;
   margin-bottom: 25px;
-  color: white;
+  color: black;
 }
 
 /* From cssbuttons.io */
@@ -95,3 +96,34 @@ button {
      text-decoration: none;}
    
    .emoji{vertical-align: middle;}
+
+
+   .Titlewrapper {
+    height: 100vh;
+    /*This part is important for centering*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .typing-demo {
+    width: 22ch;
+    animation: typing 2s steps(22), blink .5s step-end infinite alternate;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid;
+    font-family: monospace;
+    font-size: 2em;
+  }
+  
+  @keyframes typing {
+    from {
+      width: 0
+    }
+  }
+      
+  @keyframes blink {
+    50% {
+      border-color: transparent
+    }
+  }
