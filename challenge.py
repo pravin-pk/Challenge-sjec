@@ -66,8 +66,8 @@ def entries():
             (
                 values['Competition Name'],
                 values['Last Date'],
-                values['GForm link'],
-                values['application link']
+                values['GoogleForm link'],
+                values['Registration link']
             ))
 
         conn.commit()
