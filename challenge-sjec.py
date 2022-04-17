@@ -57,8 +57,11 @@ def entries():
                 
                 if passwd.password == session["password"]:
                     data = Competetions.query.all()
+                    cdata = []
+                    for val in data:
+                        cdata.append([val.id_, val.name, val.lastdate, val.gformlink, val.registrationlink])
     
-                    return render_template("detailEntry.html", content = data)
+                    return render_template("detailEntry.html", content = cdata)
                 else:
                     return redirect(url_for("login"))
             except Exception as e:
