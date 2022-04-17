@@ -4,18 +4,28 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.secret_key = "pk"
+# Setting up a Database with SQLAlchemy
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///DB.sqlite'
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] =  False
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(app) # connecting flask app to database and initializing it
 
+# Creating table in DataBase using SqlAlchemy --> by creating class we can create new table
+# It is independent of any sql syntax
 class Competetions(db.Model):
     __tablename__ = "COMPETETIONS"
-    id = db.Column("ID", db.Integer, primary_key=True)
+    id_ = db.Column("id_", db.Integer, primary_key=True) # using id_ be 'id' is standard keyword in python
+    # By defualt the first integer column which is primary key is set to auto-increment in SQLAlchemy, can override using auto_increment=False
     name = db.Column("NAME", db.String(50))
     lastdate = db.Column("LASTDATE", db.String(11))
     gformlink = db.Column("GFORMLINK", db.String(500))
     registrationlink = db.Column("REGISTRATIONLINK", db.String(500))
+
+    def __init__(self, name, lastdate, gformlink, registrationlink):
+        self.name = name
+        self.lastdate = lastdate
+        self.gformlink = gformlink
+        self.registrationlink = registrationlink
 
 class Credentials(db.Model):
     __tablename__ = "CREDENTIALS"
@@ -26,19 +36,11 @@ class Credentials(db.Model):
 @app.route("/")
 def mainpage():
     try:
-        # conn = sqlite3.connect("competetionDB.sqlite")
-        # cur = conn.cursor()
-
-        # cur.execute("SELECT * FROM COMPETETIONS")
-        
+        # quering all data from COMPETETIONS TABLE
         data = Competetions.query.all()
-        cdata = []
-        for entries in data:
-            cdata.append([entries.id,entries.name, entries.lastdate, entries.gformlink, entries.registrationlink])
-
-        return render_template("mainpage.html", content = cdata)
+        
+        return render_template("mainpage.html", content = data)
     except Exception as e:
-        # cur.close()
         print(e.args)
         return redirect("/")
 
@@ -48,90 +50,52 @@ def entries():
         if "user" in session:
 
             try:
-                # conn = sqlite3.connect("competetionDB.sqlite")
-                # cur = conn.cursor()
-
-                # cur.execute("SELECT PASSWORD FROM CREDENTIALS WHERE USERNAME = ?", (session["user"],))
-                # passwd = cur.fetchone()
-
+                # WHERE clause in SQL is 'filter_by' in SQLAlchemy, use 'first()' to get only first returned details
+                # returns Credentials class object , and attributes can be accessed using dot operator
                 passwd = Credentials.query.filter_by(username = session["user"]).first()
                 # print(passwd.password)
                 
                 if passwd.password == session["password"]:
-                    # cur.execute("SELECT * FROM COMPETETIONS")
-                    # data = cur.fetchall()
                     data = Competetions.query.all()
-                    cdata = []
-                    for entries in data:
-                        cdata.append([entries.id,entries.name, entries.lastdate, entries.gformlink, entries.registrationlink])
-
-                    print(cdata)
-                    return render_template("detailEntry.html", content = cdata)
+    
+                    return render_template("detailEntry.html", content = data)
                 else:
                     return redirect(url_for("login"))
             except Exception as e:
-                # cur.close()
                 print(e.args)
                 return redirect("/")
         else:
             return redirect(url_for("login"))
 
     try:
+        # getting a list of data from front-end using ajax
         data = request.get_json()
 
-        # conn = sqlite3.connect("competetionDB.sqlite")
-        # cur = conn.cursor()
-
-        # cur.execute("""CREATE TABLE IF NOT EXISTS "COMPETETIONS" (
-        #                 "ID"	INTEGER,
-        #                 "NAME"	TEXT,
-        #                 "LASTDATE"	DATE,
-        #                 "GFORMLINK"	TEXT,
-        #                 "APPLICATIONLINK"	TEXT,
-        #                 PRIMARY KEY("ID" AUTOINCREMENT)
-        #             );""")
-
-        # cur.execute("DELETE FROM COMPETETIONS")
-        # for values in data:
-        #     cur.execute("INSERT INTO COMPETETIONS (NAME, LASTDATE, GFORMLINK, APPLICATIONLINK) VALUES (?, ?, ?, ?)",
-        #     (
-        #         values['Competition Name'],
-        #         values['Last Date'],
-        #         values['GoogleForm link'],
-        #         values['Registration link']
-        #     ))
-
-        # conn.commit()
-        # cur.close()
-
+        # Deleting all records in the COMPETETIONS TABLE
         Competetions.query.delete()
-        db.session.commit()
+        db.session.commit() # committing the changes into the database
+        # Whenever we alter the records, DO NOT FORGET TO COMMIT CHANGES
 
         for values in data:
+            # creating a Competetions class' object and initializing the values
             c = Competetions( name=values['Competition Name'], 
                               lastdate=values['Last Date'], 
                               gformlink=values['GoogleForm link'],
                               registrationlink=values['Registration link'] )
+            # adding the object to DB, i.e inserting the record into the respective table of the database
             db.session.add(c)
-            db.session.commit()
+            db.session.commit() # commit changes
 
         return redirect(url_for("entries"))
     except Exception as e:
-        # cur.close()
         print(e.args)
         return redirect("/")
 
 
 @app.route("/delete", methods = ["POST"])
 def delete():
-    # conn = sqlite3.connect("competetionDB.sqlite")
-    # cur = conn.cursor()
-
-    # cur.execute("DELETE FROM COMPETETIONS WHERE ID = ?", (request.form.get('deletebtn'), ))
-    # conn.commit()
-    # cur.close()
-
-    Competetions.query.filter_by(id=request.form.get('deletebtn')).delete()
+    # Deleting a record from COMPETETIONS TABLE using Competetion class
+    Competetions.query.filter_by(id_=request.form.get('deletebtn')).delete()
     db.session.commit()
 
     return "<script> document.location = '/entries'; </script>"
@@ -141,15 +105,17 @@ def login():
     if request.method != "POST":
         return render_template("loginPage.html")
 
+    # sessions to store the details of logged in user
     session["user"] = request.form.get("Username")
     session["password"] = request.form.get("Password")
 
     return redirect(url_for("entries"))
 
+# Flask buit-in 404-error handler
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 400
 
 if __name__ == "__main__":
-    db.create_all()
+    db.create_all() # creates a database if it does not exists while running the app
     app.run(debug=True)
