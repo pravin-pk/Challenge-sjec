@@ -1,1 +1,1 @@
-web: gunicorn challenge:app
+web: gunicorn challenge-sjec:app
