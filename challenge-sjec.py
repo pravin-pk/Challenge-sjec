@@ -35,6 +35,7 @@ class Credentials(db.Model):
 
 @app.route("/")
 def mainpage():
+    session.clear()
     try:
         # quering all data from COMPETETIONS TABLE
         data = Competetions.query.all()
